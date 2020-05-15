@@ -32,16 +32,17 @@ import java.util.Map;
 public class JsonActivity extends AppCompatActivity implements View.OnClickListener {
     private final String Tag = "JsonActivity";
 
-    private Button JsonParse_Button,GsonParse_Button,JsonArray_Button;
+    private Button JsonParse_Button, GsonParse_Button, JsonArray_Button;
 
-    private TextView tv1,tv2;
+    private TextView tv1, tv2;
 
     private ListView listView;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)  {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_json);
+
 
         tv1 = (TextView) findViewById(R.id.status);
         tv2 = (TextView) findViewById(R.id.msg);
@@ -52,7 +53,6 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
         GsonParse_Button.setOnClickListener(this);
         JsonArray_Button = (Button) findViewById(R.id.Json_Array);
         JsonArray_Button.setOnClickListener(this);
-
 
         listView = (ListView) findViewById(R.id.list_view);
 
@@ -69,7 +69,7 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
             conn.setConnectTimeout(6000);
             conn.setRequestMethod("GET");
 
-            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 //          处理流数据，保存为String类型
                 InputStream in = conn.getInputStream();
 
@@ -77,8 +77,8 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
                 int len = 0;
 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
-                while((len = in.read(bytes))!= -1){
-                    out.write(bytes,0,len);
+                while ((len = in.read(bytes)) != -1) {
+                    out.write(bytes, 0, len);
                 }
 
                 return out.toString();
@@ -94,7 +94,7 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
         return null;
     }
 
-    private void parseByJsonObject(){
+    private void parseByJsonObject() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -105,9 +105,9 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
                     final int status = obj.getInt("status");
                     final String message = obj.getString("msg");
 
-                    Log.d(Tag,obj.getJSONObject("data")+"");
-                    Log.d(Tag,status+"");
-                    Log.d(Tag,message);
+                    Log.d(Tag, obj.getJSONObject("data") + "");
+                    Log.d(Tag, status + "");
+                    Log.d(Tag, message);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -135,17 +135,17 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
                     JSONObject obj = new JSONObject(res);
                     JSONArray arr = obj.getJSONArray("data");
 
-                    List<Map<String,String>> list = new ArrayList<>();
+                    List<Map<String, String>> list = new ArrayList<>();
 
-                    for(int i=0;i<arr.length();i++){
+                    for (int i = 0; i < arr.length(); i++) {
                         JSONObject temp = arr.getJSONObject(i);
 
                         String name = temp.getString("name");
-                        String id = temp.getInt("id")+"";
+                        String id = temp.getInt("id") + "";
 
-                        Map<String,String> map = new HashMap<>();
-                        map.put("name",name);
-                        map.put("id",id);
+                        Map<String, String> map = new HashMap<>();
+                        map.put("name", name);
+                        map.put("id", id);
 
                         list.add(map);
                     }
@@ -154,7 +154,7 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
                     String[] from = {"id", "name"};
                     int[] to = {R.id.item_id, R.id.item_name};
 
-                    final SimpleAdapter adapter = new SimpleAdapter(JsonActivity.this,list,R.layout.item,from,to);
+                    final SimpleAdapter adapter = new SimpleAdapter(JsonActivity.this, list, R.layout.item, from, to);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -174,7 +174,7 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void parseGson(){
+    private void parseGson() {
 
 ////        实例化GSON对象（工具对象）
 //        Gson gson = new Gson();
@@ -187,15 +187,14 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
 //        Log.d(Tag,b2.toString());
 
 
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Gson gson = new Gson();
                 String response = get("https://www.imooc.com/api/teacher?type=3&cid=1");
-                if(response != null){
+                if (response != null) {
                     Info info = gson.fromJson(response, Info.class);
-                    Log.d(Tag,info.toString());
+                    Log.d(Tag, info.toString());
                 }
             }
         }).start();
@@ -204,7 +203,7 @@ public class JsonActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
 //            Log.d
             case R.id.GSON_Parse:
                 parseGson();
